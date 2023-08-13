@@ -1,0 +1,17 @@
+{
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": ".env*,tsconfig.*.json,README.md,*json,*js,.gitignore,*.yaml,.prettierrc"
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    ".vscode": true,
+    "node_modules": true,
+    "dist": true
+  }
+}
