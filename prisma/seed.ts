@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { Random } from 'mockjs';
-const prisma = new PrismaClient();
+// import { PrismaClient } from '@prisma/client';
 
-async function run() {
-  for (let index = 0; index < array.length; index++) {}
-}
+// // function run() {
+//   const prisma = new PrismaClient();
+// }
