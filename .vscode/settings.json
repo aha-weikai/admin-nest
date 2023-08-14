@@ -1,7 +1,7 @@
 {
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
-    "package.json": ".env*,tsconfig.*.json,README.md,*json,*js,.gitignore,*.yaml,.prettierrc"
+    "package.json": ".env*,tsconfig.*.json,README.md,*json,*js,.gitignore,*.yaml,.prettierrc,LICENSE"
   },
   "files.exclude": {
     "**/.git": true,
