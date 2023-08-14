@@ -1,6 +1,5 @@
 import { ConfigModule } from '@nestjs/config';
-import { CommonService } from './common.service';
-import { CommonController } from './common.controller';
+import { ConfigService } from './config.service';
 import { Global, Module } from '@nestjs/common';
 import config from '../config';
 
@@ -11,7 +10,8 @@ import config from '../config';
       load: [config],
     }),
   ],
-  controllers: [CommonController],
-  providers: [CommonService],
+  controllers: [],
+  providers: [ConfigService],
+  exports: [ConfigService],
 })
 export class CommonModule {}
