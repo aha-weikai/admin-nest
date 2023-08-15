@@ -2,6 +2,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ConfigService } from './config.service';
 import { Global, Module } from '@nestjs/common';
 import config from '../config';
+import { PrismaService } from './prisma.service';
 
 @Global()
 @Module({
@@ -11,7 +12,7 @@ import config from '../config';
     }),
   ],
   controllers: [],
-  providers: [ConfigService],
-  exports: [ConfigService],
+  providers: [ConfigService, PrismaService],
+  exports: [ConfigService, PrismaService],
 })
 export class CommonModule {}
