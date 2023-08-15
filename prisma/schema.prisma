@@ -12,11 +12,11 @@ datasource db {
 
 model User {
   id       Int      @id @default(autoincrement())
-  name     String
+  name     String?  @default("新用户")
+  account  String
   password String
   email    String?
   mobile   String?
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 }
-
