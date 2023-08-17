@@ -1,4 +1,4 @@
-import { IsNotExists } from '@/validate/is-not-exists';
+import { IsNotExists } from '@/validations/is-not-exists';
 import { Length, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class RegisterDto {

@@ -1,4 +1,4 @@
-import { IsExists } from '@/validate/is-exists';
+import { IsExists } from '@/validations/is-exists';
 import { Length, IsNotEmpty } from 'class-validator';
 
 export class LoginDto {
