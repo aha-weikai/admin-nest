@@ -1,11 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { RegisterDto } from './dto/register.dto';
 import { PrismaService } from '@/common/prisma.service';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
+import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private jwt: JwtService,
+  ) {}
   async register(data: RegisterDto) {
     const userData: Record<string, any> = {};
 
@@ -21,6 +26,7 @@ export class AuthService {
   }
 
   async login(data: LoginDto) {
+    console.log(data);
     const user = await this.prisma.user.findFirst({
       where: {
         account: data.account,
@@ -29,6 +35,11 @@ export class AuthService {
     if (user.password !== data.password) {
       throw new BadRequestException('密码不正确，请重新输入');
     }
-    return user;
+    console.log('%cauth.service.ts line:38 user', 'color: #007acc;', user);
+    return this.getToken(user);
+  }
+
+  private getToken(user: User) {
+    return this.jwt.sign({ id: user.id });
   }
 }

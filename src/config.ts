@@ -5,4 +5,5 @@ import { registerAs } from '@nestjs/config';
 export default registerAs('app', () => ({
   name: 'kaixin',
   city: 'suqian',
+  app_key: 'weikai',
 }));
