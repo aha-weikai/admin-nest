@@ -26,7 +26,6 @@ export class AuthService {
   }
 
   async login(data: LoginDto) {
-    console.log(data);
     const user = await this.prisma.user.findFirst({
       where: {
         account: data.account,
@@ -35,11 +34,19 @@ export class AuthService {
     if (user.password !== data.password) {
       throw new BadRequestException('密码不正确，请重新输入');
     }
-    console.log('%cauth.service.ts line:38 user', 'color: #007acc;', user);
-    return this.getToken(user);
+    return {
+      accessToken: this.getToken(user, '12h'),
+      refreshToken: this.getToken(user, '7d'),
+    };
   }
 
-  private getToken(user: User) {
-    return this.jwt.sign({ id: user.id });
+  refreshToken(user: User) {
+    return {
+      accessToken: this.getToken(user, '12h'),
+    };
+  }
+
+  private getToken(user: User, expiresIn: string | number) {
+    return this.jwt.sign({ id: user.id }, { expiresIn });
   }
 }
