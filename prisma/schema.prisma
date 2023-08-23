@@ -19,4 +19,12 @@ model User {
   mobile   String?
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
+  Salt     Salt     @relation(fields: [saltId], references: [id], onDelete: Cascade)
+  saltId   Int
+}
+
+model Salt {
+  id   Int    @id @default(autoincrement())
+  User User[]
+  salt String
 }
