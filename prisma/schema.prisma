@@ -26,5 +26,5 @@ model User {
 model Salt {
   id   Int    @id @default(autoincrement())
   User User[]
-  salt String
+  salt Bytes
 }
