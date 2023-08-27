@@ -10,4 +10,7 @@ export class LoginDto {
   @Length(6, 20)
   @IsNotEmpty()
   password: string;
+
+  @IsNotEmpty()
+  publicKey: string;
 }

@@ -6,7 +6,6 @@ export class CustomValidationPipe extends ValidationPipe {
   protected flattenValidationErrors(
     validationErrors: ValidationError[],
   ): any[] {
-    console.log(validationErrors);
     return validationErrors.map((err) => ({
       field: err.property,
       // message: err.constraints[Object.keys(err.constraints)[0]],
