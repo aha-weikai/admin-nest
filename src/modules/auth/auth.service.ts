@@ -30,7 +30,8 @@ export class AuthService {
   async login(data: LoginDto) {
     let password;
     try {
-      password = this.getPassword(data.publicKey, data.password);
+      password = await this.getPassword(data.publicKey, data.password);
+      console.log(password);
     } catch (error) {
       throw new BadRequestException('密码不正确，请重新输入');
     }
@@ -72,7 +73,6 @@ export class AuthService {
   }
   async getPassword(publicKey, hashPassword) {
     const privateKey = await this.redis.client.get(`publicKey:${publicKey}`);
-
     const decrypt = new NodeRSA(privateKey);
     decrypt.setOptions({ encryptionScheme: 'pkcs1' });
     try {
