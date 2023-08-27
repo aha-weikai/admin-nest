@@ -33,4 +33,9 @@ export class AuthController {
   refreshToken(@Request() req) {
     return this.authService.refreshToken(req.user);
   }
+
+  @Get('public_key')
+  getPublicKey() {
+    return this.authService.getPublicKey();
+  }
 }
