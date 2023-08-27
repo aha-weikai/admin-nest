@@ -3,6 +3,7 @@ import { ConfigService } from './config.service';
 import { Global, Module } from '@nestjs/common';
 import config from '../config';
 import { PrismaService } from './prisma.service';
+import { RedisService } from './redis.service';
 
 @Global()
 @Module({
@@ -12,7 +13,7 @@ import { PrismaService } from './prisma.service';
     }),
   ],
   controllers: [],
-  providers: [ConfigService, PrismaService],
-  exports: [ConfigService, PrismaService],
+  providers: [ConfigService, PrismaService, RedisService],
+  exports: [ConfigService, PrismaService, RedisService],
 })
 export class CommonModule {}
