@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 // import { ValidationPipe } from '@nestjs/common';
-import { CustomValidationPipe } from './pipes/custom-validation.pipe';
 import { HttpStatus } from '@nestjs/common';
+import { CustomValidationPipe } from './pipes/custom-validation.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +18,9 @@ async function bootstrap() {
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
     }),
   );
+
+  // app.useGlobalFilters(new ValidateExceptionFilter());
+  app.enableCors();
   await app.listen(3000);
 }
 bootstrap();
