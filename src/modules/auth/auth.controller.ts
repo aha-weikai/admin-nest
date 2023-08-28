@@ -10,6 +10,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { FormDataRequest } from 'nestjs-form-data';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +24,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @FormDataRequest()
   async login(@Body() data: LoginDto) {
     const token = await this.authService.login(data);
     return token;
@@ -38,4 +40,7 @@ export class AuthController {
   getPublicKey() {
     return this.authService.getPublicKey();
   }
+
+  @Get('svg_captcha')
+  getSvgCaptcha() {}
 }
