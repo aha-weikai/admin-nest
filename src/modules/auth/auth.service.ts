@@ -1,5 +1,5 @@
 import { PrismaService } from '@/common/prisma.service';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Body, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { LoginDto } from './dto/login.dto';
@@ -17,24 +17,18 @@ export class AuthService {
     private saltService: SaltService,
     private redis: RedisService,
   ) {}
+
   async register(data: RegisterDto) {
     const salt = await this.saltService.createSalt();
     data.password = await this.hashPassword(data.password, salt.salt);
-
     const user = await this.prisma.user.create({
       data: { ...data, saltId: salt.id },
     });
     return user;
   }
 
-  async login(data: LoginDto) {
-    let password;
-    try {
-      password = await this.getPassword(data.publicKey, data.password);
-      console.log(password);
-    } catch (error) {
-      throw new BadRequestException('密码不正确，请重新输入');
-    }
+  async login(@Body() data: LoginDto) {
+    const password = await this.getPassword(data.publicKey, data.password);
 
     const user = await this.prisma.user.findFirst({
       where: { account: data.account },
@@ -68,18 +62,19 @@ export class AuthService {
 
   async getPublicKey() {
     const key = getSecretKey();
-    await this.redis.client.set(`publicKey:${key.publicKey}`, key.privateKey);
+    await this.redis.set(`publicKey:${key.publicKey}`, key.privateKey, 5 * 60);
     return key.publicKey;
   }
+
   async getPassword(publicKey, hashPassword) {
-    const privateKey = await this.redis.client.get(`publicKey:${publicKey}`);
+    const privateKey = await this.redis.get(`publicKey:${publicKey}`);
     const decrypt = new NodeRSA(privateKey);
     decrypt.setOptions({ encryptionScheme: 'pkcs1' });
     try {
       const password = decrypt.decrypt(hashPassword, 'utf8');
       return password;
     } catch (error) {
-      new BadRequestException({
+      throw new BadRequestException({
         error: 'Bad Request',
         message: '密码错误',
         statusCode: 400,
@@ -98,14 +93,11 @@ export class AuthService {
   private async verifyPassword(innerPassword, password, salt) {
     try {
       if (await argon2.verify(innerPassword, password, getSaltOptions(salt))) {
-        // password match
         return true;
       } else {
-        // password did not match
         return false;
       }
     } catch (err) {
-      // internal failure
       console.log(err);
       return false;
     }
