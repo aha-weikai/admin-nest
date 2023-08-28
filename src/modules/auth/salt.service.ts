@@ -8,15 +8,14 @@ export class SaltService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createSalt() {
-    const salt = await createSalt();
-    return this.prisma.salt.create({
+    const salt = createSalt();
+    return await this.prisma.salt.create({
       data: { salt },
     });
   }
 
   async upDateSalt(id) {
     const salt = createSalt();
-    console.log(id);
     return await this.prisma.salt.update({
       where: { id },
       data: { salt },

@@ -12,4 +12,10 @@ export class LoginDto {
 
   @IsNotEmpty()
   publicKey: string;
+
+  @IsNotEmpty()
+  captchaKey: string;
+
+  @IsNotEmpty()
+  captchaData: string;
 }

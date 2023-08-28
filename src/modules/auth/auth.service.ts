@@ -8,6 +8,7 @@ import * as argon2 from 'argon2';
 import { SaltService } from './salt.service';
 import NodeRSA from 'node-rsa';
 import { RedisService } from '@/common/redis.service';
+import { CaptchaService } from '../captcha/captcha.service';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,7 @@ export class AuthService {
     private jwt: JwtService,
     private saltService: SaltService,
     private redis: RedisService,
+    private captchaService: CaptchaService,
   ) {}
 
   async register(data: RegisterDto) {
@@ -28,6 +30,11 @@ export class AuthService {
   }
 
   async login(@Body() data: LoginDto) {
+    const captchaRes = await this.captchaService.verify(
+      data.captchaKey,
+      data.captchaData,
+    );
+    console.log(captchaRes);
     const password = await this.getPassword(data.publicKey, data.password);
 
     const user = await this.prisma.user.findFirst({
