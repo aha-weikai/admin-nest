@@ -13,4 +13,12 @@ export class RedisService {
       db: 0, // Defaults to 0
     });
   }
+
+  async set(key, value, ttl?, type = 'EX' as any) {
+    return await this.client.set(key, value, type, ttl);
+  }
+
+  async get(key) {
+    return await this.client.get(key);
+  }
 }
