@@ -15,6 +15,7 @@ export class CaptchaService {
       size: 6,
       noise: 3,
       color: true,
+      height: 32,
     });
 
     const captchaKey = md5('' + now());

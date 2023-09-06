@@ -14,7 +14,8 @@ export class RedisService {
     });
   }
 
-  async set(key, value, ttl?, type = 'EX' as any) {
+  async set(key, value, ttl = 5 * 1000, type = 'EX' as any) {
+    console.log(key, value, ttl, type);
     return await this.client.set(key, value, type, ttl);
   }
 
