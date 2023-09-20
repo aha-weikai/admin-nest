@@ -20,12 +20,15 @@ export class CaptchaService {
 
     const captchaKey = md5('' + now());
     await this.redis.set(`captcha:${captchaKey}`, data.text);
-    console.log('%ccaptcha.service.ts line:23 data', 'color: #007acc;', data);
-    return data.data;
+
+    return {
+      captchaKey,
+      data: data.data,
+    };
   }
 
   async verify(captchaKey, answer) {
-    const correctAnswer = await this.redis.get(captchaKey);
+    const correctAnswer = await this.redis.get(`captcha:${captchaKey}`);
     if (correctAnswer === answer) {
       return true;
     } else {
