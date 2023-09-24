@@ -19,4 +19,7 @@ export class RegisterDto {
   @IsNotEmpty()
   @IsOptional()
   name: string;
+
+  @IsNotEmpty()
+  publicKey: string;
 }

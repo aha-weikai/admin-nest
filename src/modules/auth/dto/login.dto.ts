@@ -1,5 +1,5 @@
 import { IsExists } from '@/validations/is-exists';
-import { Length, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, Length } from 'class-validator';
 
 export class LoginDto {
   @IsExists('user', ['account'], { message: '该账号尚未注册' })
