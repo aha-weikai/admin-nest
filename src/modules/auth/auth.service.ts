@@ -62,12 +62,21 @@ export class AuthService {
     };
   }
 
+  /**
+   * # 获取新的accessToken
+   * @param user
+   * @returns
+   */
   refreshToken(user: User) {
     return {
       accessToken: this.getToken(user, '12h'),
     };
   }
 
+  /**
+   * # 获取publicKey
+   * @description 获取publicKey，并且将publicKye和privateKey存入redis
+   */
   async getPublicKey() {
     const key = getSecretKey();
     await this.redis.set(`publicKey:${key.publicKey}`, key.privateKey, 5 * 60);
@@ -119,14 +128,14 @@ export class AuthService {
  * # 将salt转换成buffer，获取salt的选项。
  * @description 获取salt的选项，用于argon2的加密和解密
  */
-function getSaltOptions(salt) {
+function getSaltOptions(salt: Buffer) {
   return {
     type: argon2.argon2i,
     hashLength: 32, // 哈希函数输出的字节长度(请注意，生成的哈希是使用Base64编码的，因此长度将增加约1/3)
     timeCost: 3, // 时间成本是哈希函数使用的通过次数（迭代次数）
     memoryCost: 2 ** 16, // 默认 4096（单位 KB，即 4MB）
     parallelism: 1, //用于计算哈希值的线程数量。每个线程都有一个具有memoryCost大小的内存池
-    salt: Buffer.from(salt),
+    salt,
   };
   // argon2 内部代码
   // 自己生成一份salt
