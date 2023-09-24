@@ -21,8 +21,9 @@ export class AuthService {
   ) {}
 
   async register(data: RegisterDto) {
+    const password = await this.getPassword(data.publicKey, data.password);
     const salt = await this.saltService.createSalt();
-    data.password = await this.hashPassword(data.password, salt.salt);
+    data.password = await this.hashPassword(password, salt.salt);
     const user = await this.prisma.user.create({
       data: { ...data, saltId: salt.id },
     });
@@ -73,6 +74,9 @@ export class AuthService {
     return key.publicKey;
   }
 
+  /**
+   * # 根据publicKye解析出hashPassword中的password
+   */
   async getPassword(publicKey, hashPassword) {
     const privateKey = await this.redis.get(`publicKey:${publicKey}`);
     const decrypt = new NodeRSA(privateKey);
@@ -111,6 +115,10 @@ export class AuthService {
   }
 }
 
+/**
+ * # 将salt转换成buffer，获取salt的选项。
+ * @description 获取salt的选项，用于argon2的加密和解密
+ */
 function getSaltOptions(salt) {
   return {
     type: argon2.argon2i,
@@ -120,13 +128,15 @@ function getSaltOptions(salt) {
     parallelism: 1, //用于计算哈希值的线程数量。每个线程都有一个具有memoryCost大小的内存池
     salt: Buffer.from(salt),
   };
+  // argon2 内部代码
+  // 自己生成一份salt
+  // salt = salt || (await generateSalt(options.saltLength));
+  // 也可以自己传入salt
 }
 
-// argon2 内部代码
-// 自己生成一份salt
-// salt = salt || (await generateSalt(options.saltLength));
-// 也可以自己传入salt
-
+/**
+ * # 获取 publicKey 和 privateKey
+ */
 function getSecretKey() {
   const key = new NodeRSA({ b: 512 });
   const publicKey = key.exportKey('public');
