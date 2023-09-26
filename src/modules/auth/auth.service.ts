@@ -9,6 +9,7 @@ import { SaltService } from './salt.service';
 import NodeRSA from 'node-rsa';
 import { RedisService } from '@/common/redis.service';
 import { CaptchaService } from '../captcha/captcha.service';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class AuthService {
@@ -24,8 +25,12 @@ export class AuthService {
     const password = await this.getPassword(data.publicKey, data.password);
     const salt = await this.saltService.createSalt();
     data.password = await this.hashPassword(password, salt.salt);
+    const userData = plainToInstance(RegisterDto, data, {
+      excludeExtraneousValues: true,
+    });
+    console.log(userData);
     const user = await this.prisma.user.create({
-      data: { ...data, saltId: salt.id },
+      data: { ...userData, saltId: salt.id },
     });
     return user;
   }
