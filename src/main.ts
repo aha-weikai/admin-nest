@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { TransformInterceptor } from './interceptors';
 // import { ValidationPipe } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
 import { CustomValidationPipe } from './pipes/custom-validation.pipe';
@@ -19,7 +20,9 @@ async function bootstrap() {
     }),
   );
 
+  app.useGlobalInterceptors(new TransformInterceptor());
   // app.useGlobalFilters(new ValidateExceptionFilter());
+  // 处理跨域
   app.enableCors();
   await app.listen(3000);
 }
