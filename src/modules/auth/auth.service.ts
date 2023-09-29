@@ -23,6 +23,9 @@ export class AuthService {
 
   async register(data: RegisterDto) {
     const password = await this.getPassword(data.publicKey, data.password);
+    // 单机状态直接通过一个map进行保存，然后类似于前端的放重复提交
+    // 如果是多机状态则不同，因为map无法共享
+    // 消息队列是干什么的，需要了解一下
     const salt = await this.saltService.createSalt();
     data.password = await this.hashPassword(password, salt.salt);
     const userData = plainToInstance(RegisterDto, data, {
