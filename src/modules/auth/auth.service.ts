@@ -26,6 +26,9 @@ export class AuthService {
     // 单机状态直接通过一个map进行保存，然后类似于前端的放重复提交
     // 如果是多机状态则不同，因为map无法共享
     // 消息队列是干什么的，需要了解一下
+    // 经测试，在dev跑nest时，请求接口是按照队列进行处理的，js是单线程语言
+    // 正式环境下需要使用pm2 运行node服务，通过多线程，运行多个后端服务。
+    // 所以使用map 不可以，需要使用类似于redis，可以多个后端服务都可以访问
     const salt = await this.saltService.createSalt();
     data.password = await this.hashPassword(password, salt.salt);
     const userData = plainToInstance(RegisterDto, data, {
