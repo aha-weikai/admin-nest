@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CaptchaController } from './captcha.controller';
-import { CaptchaService } from './captcha.service';
+import { CaptchaController } from '../captcha.controller';
+import { CaptchaService } from '../captcha.service';
 
 describe('CaptchaController', () => {
   let controller: CaptchaController;

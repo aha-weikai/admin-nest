@@ -48,7 +48,7 @@ export class AuthService {
     );
     console.log(captchaRes);
     const password = await this.getPassword(data.publicKey, data.password);
-
+    console.log(password, 'password');
     const user = await this.prisma.user.findFirst({
       where: { account: data.account },
     });
@@ -105,6 +105,7 @@ export class AuthService {
       const password = decrypt.decrypt(hashPassword, 'utf8');
       return password;
     } catch (error) {
+      console.log(error);
       throw new BadRequestException({
         error: 'Bad Request',
         message: '密码错误',
