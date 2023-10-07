@@ -99,6 +99,13 @@ export class AuthService {
    */
   async getPassword(publicKey, hashPassword) {
     const privateKey = await this.redis.get(`publicKey:${publicKey}`);
+    if (!privateKey) {
+      throw new BadRequestException({
+        error: 'Bad Request',
+        message: '登录超时',
+        statusCode: 400,
+      });
+    }
     const decrypt = new NodeRSA(privateKey);
     decrypt.setOptions({ encryptionScheme: 'pkcs1' });
     try {
