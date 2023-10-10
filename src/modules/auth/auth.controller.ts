@@ -20,7 +20,7 @@ export class AuthController {
   async register(@Body() data: RegisterDto) {
     const user = await this.authService.register(data);
     Reflect.deleteProperty(user, 'password');
-    return user;
+    return {};
   }
 
   @Post('login')
