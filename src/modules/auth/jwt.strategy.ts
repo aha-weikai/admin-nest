@@ -30,7 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * @returns 返回的数据，默认放在request.user
    */
   async validate(payload: any) {
-    const user = this.prisma.user.findFirst({
+    const user = this.prisma.user.findUnique({
       where: {
         id: payload.id,
       },

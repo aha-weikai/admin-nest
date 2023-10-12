@@ -1,14 +1,15 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Auth, User, UserEntity } from '@/decorators/auth';
+import { Controller, Get, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 
-@Controller('user')
+@Controller('user_info')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  @UseGuards(AuthGuard('jwt'))
-  @Get('user_info')
-  getUserInfo(@Request() req) {
-    return req.user;
+
+  @Auth()
+  @Get()
+  getUserInfo(@User() user: UserEntity) {
+    return user;
   }
 
   @Post('update')
