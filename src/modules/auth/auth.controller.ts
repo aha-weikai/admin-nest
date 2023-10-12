@@ -32,15 +32,12 @@ export class AuthController {
 
   @Get('refresh_token')
   @UseGuards(AuthGuard('jwt'))
-  refreshToken(@Request() req) {
+  async refreshToken(@Request() req) {
     return this.authService.refreshToken(req.user);
   }
 
   @Get('public_key')
-  getPublicKey() {
+  async getPublicKey() {
     return this.authService.getPublicKey();
   }
-
-  @Get('svg_captcha')
-  getSvgCaptcha() {}
 }

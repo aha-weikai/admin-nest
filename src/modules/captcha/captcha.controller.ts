@@ -6,7 +6,7 @@ export class CaptchaController {
   constructor(private readonly captchaService: CaptchaService) {}
 
   @Get()
-  getCaptcha() {
+  async getCaptcha() {
     return this.captchaService.create();
   }
 }
