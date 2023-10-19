@@ -1,7 +1,8 @@
 import { ConfigService } from '@/common/config.service';
-import { PrismaService } from '@/common/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { ExtendedPrismaClient } from '@/common/prisma.service';
+import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
+import { CustomPrismaService } from 'nestjs-prisma';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 /**
@@ -11,7 +12,8 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(
     private config: ConfigService,
-    private prisma: PrismaService,
+    @Inject('PrismaService')
+    private readonly prisma: CustomPrismaService<ExtendedPrismaClient>,
   ) {
     super({
       // 提供从请求中提取jwt 的方法
@@ -30,7 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * @returns 返回的数据，默认放在request.user
    */
   async validate(payload: any) {
-    const user = this.prisma.user.findUnique({
+    const user = this.prisma.client.user.findUnique({
       where: {
         id: payload.id,
       },

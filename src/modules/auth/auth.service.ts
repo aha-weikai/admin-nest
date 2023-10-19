@@ -1,20 +1,22 @@
-import { PrismaService } from '@/common/prisma.service';
-import { BadRequestException, Body, Injectable } from '@nestjs/common';
+import { ExtendedPrismaClient } from '@/common/prisma.service';
+import { RedisService } from '@/common/redis.service';
+import { BadRequestException, Body, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
+import * as argon2 from 'argon2';
+import { plainToInstance } from 'class-transformer';
+import { CustomPrismaService } from 'nestjs-prisma';
+import NodeRSA from 'node-rsa';
+import { CaptchaService } from '../captcha/captcha.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import * as argon2 from 'argon2';
 import { SaltService } from './salt.service';
-import NodeRSA from 'node-rsa';
-import { RedisService } from '@/common/redis.service';
-import { CaptchaService } from '../captcha/captcha.service';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly prisma: PrismaService,
+    @Inject('PrismaService')
+    private readonly prisma: CustomPrismaService<ExtendedPrismaClient>,
     private jwt: JwtService,
     private saltService: SaltService,
     private redis: RedisService,
@@ -34,8 +36,7 @@ export class AuthService {
     const userData = plainToInstance(RegisterDto, data, {
       excludeExtraneousValues: true,
     });
-    console.log(userData);
-    const user = await this.prisma.user.create({
+    const user = await this.prisma.client.user.create({
       data: { ...userData, saltId: salt.id },
     });
     return user;
@@ -49,7 +50,7 @@ export class AuthService {
     console.log(captchaRes);
     const password = await this.getPassword(data.publicKey, data.password);
     console.log(password, 'password');
-    const user = await this.prisma.user.findFirst({
+    const user = await this.prisma.client.user.findFirst({
       where: { account: data.account },
     });
 
@@ -59,7 +60,7 @@ export class AuthService {
     if (res) {
       const newSalt = await this.saltService.upDateSalt(user.saltId);
       const newPassword = await this.hashPassword(password, newSalt.salt);
-      await this.prisma.user.update({
+      await this.prisma.client.user.update({
         where: { id: user.id },
         data: { password: newPassword },
       });

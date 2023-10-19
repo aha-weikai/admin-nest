@@ -1,29 +1,33 @@
-import { PrismaService } from '@/common/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { ExtendedPrismaClient } from '@/common/prisma.service';
+import { Inject, Injectable } from '@nestjs/common';
 // import * as crypto from 'crypto-random-string';
 import * as crypto from 'crypto';
+import { CustomPrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class SaltService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @Inject('PrismaService')
+    private readonly prisma: CustomPrismaService<ExtendedPrismaClient>,
+  ) {}
 
   async createSalt() {
     const salt = createSalt();
-    return await this.prisma.salt.create({
+    return await this.prisma.client.salt.create({
       data: { salt },
     });
   }
 
   async upDateSalt(id) {
     const salt = createSalt();
-    return await this.prisma.salt.update({
+    return await this.prisma.client.salt.update({
       where: { id },
       data: { salt },
     });
   }
 
   async getSalt(id) {
-    return this.prisma.salt.findUnique({
+    return this.prisma.client.salt.findUnique({
       where: { id },
     });
   }

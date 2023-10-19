@@ -1,11 +1,15 @@
-import { PrismaService } from '@/common/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { ExtendedPrismaClient } from '@/common/prisma.service';
+import { Inject, Injectable } from '@nestjs/common';
+import { CustomPrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject('PrismaService')
+    private readonly prisma: CustomPrismaService<ExtendedPrismaClient>,
+  ) {}
 
   getUserInfo(id: number) {
-    return this.prisma.user.findUnique({ where: { id } });
+    return this.prisma.client.user.findUnique({ where: { id } });
   }
 }
