@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
+  id       BigInt   @id
   name     String?  @default("新用户")
   account  String
   password String
@@ -20,11 +20,11 @@ model User {
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
   Salt     Salt     @relation(fields: [saltId], references: [id], onDelete: Cascade)
-  saltId   Int
+  saltId   BigInt
 }
 
 model Salt {
-  id   Int    @id @default(autoincrement())
+  id   BigInt @id
   User User[]
   salt Bytes
 }
