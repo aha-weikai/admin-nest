@@ -69,7 +69,7 @@ export class AuthService {
     }
 
     return {
-      accessToken: this.getToken(user, '12h'),
+      accessToken: this.getToken(user, '20s'),
       refreshToken: this.getToken(user, '7d'),
     };
   }
@@ -77,11 +77,10 @@ export class AuthService {
   /**
    * # 获取新的accessToken
    * @param user
-   * @returns
    */
   refreshToken(user: User) {
     return {
-      accessToken: this.getToken(user, '12h'),
+      accessToken: this.getToken(user, '20s'),
     };
   }
 

@@ -16,7 +16,6 @@ import { CaptchaService } from '../captcha/captcha.service';
       useFactory(config: ConfigService) {
         return {
           secret: config.get('app_key'),
-          signOptions: { expiresIn: '30d' },
         };
       },
     }),
