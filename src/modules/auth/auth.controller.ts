@@ -1,16 +1,9 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Auth } from '@/decorators/auth';
+import { Body, Controller, Get, Post, Request } from '@nestjs/common';
+import { FormDataRequest } from 'nestjs-form-data';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { FormDataRequest } from 'nestjs-form-data';
 
 @Controller('auth')
 export class AuthController {
@@ -31,7 +24,7 @@ export class AuthController {
   }
 
   @Get('refresh_token')
-  @UseGuards(AuthGuard('jwt'))
+  @Auth()
   async refreshToken(@Request() req) {
     return this.authService.refreshToken(req.user);
   }
