@@ -19,7 +19,6 @@ export const Auth = () => {
  */
 export const User = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
-    console.log(ctx);
     const request = ctx.switchToHttp().getRequest();
     const user = request.user as UserEntity;
     Reflect.deleteProperty(user, 'saltId');

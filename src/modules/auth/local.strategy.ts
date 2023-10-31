@@ -17,7 +17,6 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
    * @returns 返回的数据，默认放在 request.user
    */
   async validate(account: string, password: string): Promise<any> {
-    console.log(`output-password`, password);
     return password;
   }
 }

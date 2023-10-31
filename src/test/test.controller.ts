@@ -7,7 +7,6 @@ export class TestController {
 
   @Get()
   async test() {
-    console.log(this.configService.get('isDev'));
     await new Promise<void>((resolve) => {
       setTimeout(() => {
         resolve();

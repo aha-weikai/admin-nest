@@ -43,13 +43,9 @@ export class AuthService {
   }
 
   async login(@Body() data: LoginDto) {
-    const captchaRes = await this.captchaService.verify(
-      data.captchaKey,
-      data.captchaData,
-    );
-    console.log(captchaRes);
+    await this.captchaService.verify(data.captchaKey, data.captchaData);
+
     const password = await this.getPassword(data.publicKey, data.password);
-    console.log(password, 'password');
     const user = await this.prisma.client.user.findFirst({
       where: { account: data.account },
     });
@@ -112,7 +108,6 @@ export class AuthService {
       const password = decrypt.decrypt(hashPassword, 'utf8');
       return password;
     } catch (error) {
-      console.log(error);
       throw new BadRequestException({
         error: 'Bad Request',
         message: '密码错误',
@@ -137,7 +132,6 @@ export class AuthService {
         return false;
       }
     } catch (err) {
-      console.log(err);
       return false;
     }
   }

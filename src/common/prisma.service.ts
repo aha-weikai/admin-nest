@@ -23,7 +23,6 @@ export const extendedPrismaClient = new PrismaClient().$extends({
       async createData(this, data) {
         // Get the current model at runtime
         const context = Prisma.getExtensionContext(this);
-        console.log(context);
         const result = await context.create({ data });
         return result;
       },
